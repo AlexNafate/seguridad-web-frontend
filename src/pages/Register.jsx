@@ -14,7 +14,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [exito, setExito] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     console.log("FORMULARIO ENVIADO");
@@ -42,7 +42,7 @@ export default function Register() {
       return;
     }
 
-    const resultado = register({
+    const resultado = await register({
       nombre: nombre,
       correo: correo,
       contrasena: contrasena,
@@ -67,7 +67,6 @@ export default function Register() {
     return (
       <main className="auth-container">
         <section className="auth-card">
-
           <h1>¡Registro exitoso!</h1>
 
           <p>
@@ -84,7 +83,6 @@ export default function Register() {
           >
             Ir al inicio de sesión
           </button>
-
         </section>
       </main>
     );
@@ -93,7 +91,6 @@ export default function Register() {
   return (
     <main className="auth-container">
       <section className="auth-card">
-
         <h1>Crear cuenta</h1>
 
         <p>
@@ -101,7 +98,6 @@ export default function Register() {
         </p>
 
         <form onSubmit={handleSubmit}>
-
           <label htmlFor="nombre">
             Nombre completo
           </label>
@@ -171,7 +167,6 @@ export default function Register() {
           <button type="submit">
             Crear cuenta
           </button>
-
         </form>
 
         <p className="auth-footer">
@@ -180,7 +175,6 @@ export default function Register() {
             Inicia sesión
           </Link>
         </p>
-
       </section>
     </main>
   );

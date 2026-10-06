@@ -6,28 +6,39 @@ export default function Login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+
     setError("");
+    setCargando(true);
 
-    const correcto = login(correo, contrasena);
+    try {
+      const resultado = await login(correo, contrasena);
 
-    if (!correcto) {
-      setError("Correo o contraseña incorrectos.");
-      return;
+      if (!resultado.success) {
+        setError(resultado.message);
+        return;
+      }
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setError("Ocurrió un error al iniciar sesión.");
+    } finally {
+      setCargando(false);
     }
-
-    navigate("/dashboard");
   }
 
   return (
     <main className="auth-container">
       <section className="auth-card">
         <h1>Bienvenido</h1>
+
         <p>Inicia sesión en SecureWeb</p>
 
         <form onSubmit={handleSubmit}>
@@ -43,6 +54,7 @@ export default function Login() {
             placeholder="tu@correo.com"
             autoComplete="email"
             required
+            disabled={cargando}
           />
 
           <label htmlFor="contrasena">
@@ -57,20 +69,25 @@ export default function Login() {
             placeholder="Escribe tu contraseña"
             autoComplete="current-password"
             required
+            disabled={cargando}
           />
 
           {error && (
-            <p className="error-message">{error}</p>
+            <p className="error-message">
+              {error}
+            </p>
           )}
 
-          <button type="submit">
-            Iniciar sesión
+          <button type="submit" disabled={cargando}>
+            {cargando ? "Iniciando sesión..." : "Iniciar sesión"}
           </button>
         </form>
 
         <p className="auth-footer">
           ¿No tienes una cuenta?{" "}
-          <Link to="/register">Regístrate</Link>
+          <Link to="/register">
+            Regístrate
+          </Link>
         </p>
       </section>
     </main>
